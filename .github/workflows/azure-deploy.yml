@@ -9,6 +9,7 @@ on:
 env:
   AZURE_RESOURCE_GROUP: 'doctorai-rg'
   AZURE_APP_NAME: 'doctorai-app'
+  NEXT_PUBLIC_API_URL: 'https://doctorai-app.azurewebsites.net'
 
 jobs:
   build-and-deploy:
