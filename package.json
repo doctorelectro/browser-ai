@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Multi-functional AI Assistant - Mail, Drive, Browser, Python, Audio, PDF",
   "private": true,
+  "type": "module",
   "workspaces": [
     "backend",
     "frontend"
@@ -11,7 +12,7 @@
     "install": "npm install --workspaces",
     "dev": "npm run dev --workspaces",
     "build": "npm run build --workspaces",
-    "start": "npm start --workspaces"
+    "start": "node backend/src/index.js"
   },
   "engines": {
     "node": ">=18.0.0",
