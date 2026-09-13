@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm install --workspaces
+      run: npm install --workspaces --legacy-peer-deps
     
     - name: Build frontend
       run: npm run build --workspace=browser-ai-frontend
