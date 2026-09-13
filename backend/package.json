@@ -1,0 +1,34 @@
+{
+  "name": "browser-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Browser AI Assistant",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "build": "echo 'No build step needed for Node.js'"
+  },
+  "keywords": ["ai", "assistant", "gmail", "gdrive", "browser"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "ws": "^8.14.2",
+    "google-auth-library": "^9.0.0",
+    "googleapis": "^118.0.0",
+    "@azure/openai": "^1.0.0",
+    "@azure/identity": "^4.0.0",
+    "uuid": "^9.0.1",
+    "pino": "^8.17.2",
+    "pino-http": "^8.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.52.0"
+  }
+}
