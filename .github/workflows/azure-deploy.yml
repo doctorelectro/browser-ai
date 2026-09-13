@@ -3,53 +3,53 @@ name: Deploy to Azure
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 env:
   AZURE_RESOURCE_GROUP: 'doctorai-rg'
   AZURE_APP_NAME: 'doctorai-app'
   NEXT_PUBLIC_API_URL: 'https://doctorai-app.azurewebsites.net'
+  NODE_ENV: 'production'
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Setup Node.js 22
+      uses: actions/setup-node@v4
       with:
         node-version: '22'
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm install --workspaces --legacy-peer-deps
+      run: npm install --workspaces --legacy-peer-deps --omit=dev
     
     - name: Build frontend
       run: npm run build --workspace=browser-ai-frontend
-    
-    - name: Lint backend (optional)
-      run: npm run lint --workspace=browser-ai-backend || true
     
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Deploy to Azure App Service
-      uses: azure/webapps-deploy@v2
+    - name: Deploy to App Service
+      uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_APP_NAME }}
         package: .
     
-    - name: Set startup command
+    - name: Configure App Service
       run: |
         az webapp config set \
           --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
           --name ${{ env.AZURE_APP_NAME }} \
           --startup-file "npm start --workspace=browser-ai-backend"
+        az webapp config appsettings set \
+          --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+          --name ${{ env.AZURE_APP_NAME }} \
+          --settings NODE_ENV="production" PORT="8080" FRONTEND_URL="https://doctorai-app.azurewebsites.net"
     
-    - name: Logout from Azure
-      run: az logout || true
+    - name: Restart App Service
+      run: az webapp restart --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_APP_NAME }}
