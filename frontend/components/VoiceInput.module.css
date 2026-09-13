@@ -1,0 +1,129 @@
+.voiceInput {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--surface);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.75rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.listening {
+  background-color: #ef4444;
+  animation: pulse 1s infinite;
+}
+
+.button.speaking {
+  background-color: #10b981;
+  animation: pulse 1s infinite;
+}
+
+.button.disabled {
+  opacity: 0.3;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.transcript {
+  padding: 1rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+}
+
+.label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.status {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+.status span {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+.listening {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.speaking {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.ready {
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+@media (max-width: 768px) {
+  .voiceInput {
+    padding: 0.75rem;
+  }
+
+  .controls {
+    gap: 0.25rem;
+  }
+
+  .button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
