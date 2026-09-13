@@ -7,6 +7,11 @@ import { createServer } from 'http';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 
+// Import routes
+import mailRoutes from './routes/mailRoutes.js';
+import driveRoutes from './routes/driveRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -23,6 +28,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(httpLogger);
 
 // Routes
@@ -30,14 +36,30 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// API Routes
+app.use('/api/mail', mailRoutes);
+app.use('/api/drive', driveRoutes);
+app.use('/api/chat', chatRoutes);
+
 // WebSocket for real-time chat
 wss.on('connection', (ws) => {
   logger.info('WebSocket client connected');
 
   ws.on('message', (message) => {
-    logger.info({ message }, 'Received message');
-    // TODO: Process message with AI
-    ws.send(JSON.stringify({ status: 'processing', message }));
+    try {
+      const data = JSON.parse(message);
+      logger.info({ message: data }, 'Received WebSocket message');
+      
+      // Echo back or process based on message type
+      ws.send(JSON.stringify({ 
+        status: 'processing', 
+        type: data.type || 'message',
+        content: data.content || data.message 
+      }));
+    } catch (error) {
+      logger.error({ error }, 'WebSocket message parsing failed');
+      ws.send(JSON.stringify({ error: 'Invalid message format' }));
+    }
   });
 
   ws.on('close', () => {
@@ -56,6 +78,11 @@ app.use((err, req, res, next) => {
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 // Start server
