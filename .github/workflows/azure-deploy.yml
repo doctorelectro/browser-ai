@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm install --workspaces --legacy-peer-deps --omit=dev
+      run: npm install --prefix backend --legacy-peer-deps --omit=dev
     
     - name: Build frontend
       run: npm run build --workspace=browser-ai-frontend
@@ -46,10 +46,18 @@ jobs:
           --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
           --name ${{ env.AZURE_APP_NAME }} \
           --startup-file "npm start --workspace=browser-ai-backend"
-        az webapp config appsettings set \
+          az webapp config appsettings set \
           --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-          --name ${{ env.AZURE_APP_NAME }} \
-          --settings NODE_ENV="production" PORT="8080" FRONTEND_URL="https://doctorai-app.azurewebsites.net"
+            --name ${{ env.AZURE_APP_NAME }} \
+            --settings \
+              NODE_ENV="production" \
+              PORT="8080" \
+              FRONTEND_URL="https://doctorai-app.azurewebsites.net" \
+              AZURE_OPENAI_API_KEY="${{ secrets.AZURE_OPENAI_API_KEY }}" \
+              AZURE_OPENAI_ENDPOINT="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
+              AZURE_OPENAI_DEPLOYMENT_NAME="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
+              GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+              GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}"
     
     - name: Restart App Service
       run: az webapp restart --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_APP_NAME }}
