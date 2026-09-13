@@ -24,6 +24,7 @@
     "googleapis": "^118.0.0",
     "@azure/openai": "^2.0.0",
     "@azure/identity": "^4.0.0",
+      "openai": "^4.0.0",
     "uuid": "^9.0.1",
     "pino": "^8.17.2",
     "pino-http": "^8.5.0"
